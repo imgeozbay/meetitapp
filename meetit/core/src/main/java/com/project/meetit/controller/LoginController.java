@@ -1,12 +1,11 @@
 package com.project.meetit.controller;
 
-import com.project.meetit.dboperations.model.User;
+import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,12 +14,20 @@ public class LoginController {
 
     private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
+    private final HostServices hostServices;
+
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private Label messageLabel;
 
-    @Autowired
-    User user;
+    public LoginController(HostServices hostServices) {
+        this.hostServices = hostServices;
+    }
+
+    @FXML
+    public void initialize() {
+        System.out.println(this.hostServices.getDocumentBase());
+    }
 
     public void sayHello() {
 

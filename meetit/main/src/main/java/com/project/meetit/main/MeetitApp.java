@@ -1,45 +1,49 @@
 package com.project.meetit.main;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+import javafx.application.HostServices;
+import javafx.application.Platform;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
 
 public class MeetitApp extends Application {
 
-    private static final Logger log = LoggerFactory.getLogger(MeetitApp.class);
-
     private ConfigurableApplicationContext springContext;
-    private Parent rootNode;
 
-    public static void main(String[] args) throws Exception {
-        launch(args);
+    @Override
+    public void init() throws Exception {
+        ApplicationContextInitializer<GenericApplicationContext> initializer = genericApplicationContext -> {
+            genericApplicationContext.registerBean(Application.class, () -> MeetitApp.this);
+            genericApplicationContext.registerBean(Parameters.class, this::getParameters);
+            genericApplicationContext.registerBean(HostServices.class, this::getHostServices);
+        };
+        this.springContext = new SpringApplicationBuilder().sources(MeetitUiApp.class).initializers(initializer).run(getParameters().getRaw().toArray(new String[0]));
     }
 
+    @Override
+    public void stop() throws Exception {
+        this.springContext.close();
+        Platform.exit();
+    }
+
+
+    @Override
     public void start(Stage stage) throws Exception {
+        this.springContext.publishEvent(new StageReadyEvent(stage));
+    }
 
-        log.info("Starting Hello JavaFX and Maven demonstration application");
+    class StageReadyEvent extends ApplicationEvent {
 
-        String fxmlFile = "/fxml/main.fxml";
-        log.debug("Loading FXML for main view from: {}", fxmlFile);
-        FXMLLoader loader = new FXMLLoader();
-        Parent rootNode = (Parent) loader.load(getClass().getResourceAsStream(fxmlFile));
+        public Stage getStage() {
+            return Stage.class.cast(getSource());
+        }
 
-        log.debug("Showing JFX scene");
-        Scene scene = new Scene(rootNode, 400, 200);
-        scene.getStylesheets().add("/styles/styles.css");
-
-        stage.setTitle("Hello JavaFX and Maven");
-        stage.setScene(scene);
-        stage.show();
-
-//        springContext = SpringApplication.run(MeetitApp.class);
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
-//        fxmlLoader.setControllerFactory(springContext::getBean);
-//        rootNode = fxmlLoader.load();
+        public StageReadyEvent(Stage source) {
+            super(source);
+        }
     }
 }
