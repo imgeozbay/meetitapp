@@ -1,5 +1,7 @@
-package com.project.meetit.main;
+package com.project.meetit.core.listener;
 
+import com.project.meetit.core.event.StageReadyEvent;
+import com.project.meetit.core.logic.ApplicationBase;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -16,19 +18,19 @@ import java.io.IOException;
 import java.net.URL;
 
 @Component
-public class StageListener implements ApplicationListener<MeetitUiApp.StageReadyEvent> {
+public class StageReadyEventListener implements ApplicationListener<StageReadyEvent> {
 
-    private static final Logger log = LoggerFactory.getLogger(StageListener.class);
+    private static final Logger log = LoggerFactory.getLogger(StageReadyEventListener.class);
 
     private final String applicationTitle;
     private final Resource fxml;
     private final Resource style;
     private final ApplicationContext applicationContext;
 
-    public StageListener(@Value("${spring.application.ui.title}") String applicationTitle,
-                         @Value("classpath:/fxml/main.fxml") Resource fxml,
-                         @Value("classpath:/styles/style.css") Resource style,
-                         ApplicationContext applicationContext) {
+    public StageReadyEventListener(@Value("${spring.application.ui.title}") String applicationTitle,
+                                   @Value("classpath:/fxml/main.fxml") Resource fxml,
+                                   @Value("classpath:/styles/style.css") Resource style,
+                                   ApplicationContext applicationContext) {
         this.applicationTitle = applicationTitle;
         this.fxml = fxml;
         this.style = style;
@@ -36,7 +38,7 @@ public class StageListener implements ApplicationListener<MeetitUiApp.StageReady
     }
 
     @Override
-    public void onApplicationEvent(MeetitUiApp.StageReadyEvent stageReadyEvent) {
+    public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
         try {
             log.info("Starting Hello JavaFX and Maven demonstration application");
 
@@ -54,6 +56,7 @@ public class StageListener implements ApplicationListener<MeetitUiApp.StageReady
             stage.setTitle("Hello JavaFX and Maven");
             stage.setScene(scene);
             stage.setTitle(this.applicationTitle);
+            ApplicationBase.getInstance().setStage(stage);
             stage.show();
         } catch (IOException e)
         {

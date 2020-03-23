@@ -9,4 +9,5 @@ public class MeetitApp {
     public static void main(String[] args) {
         Application.launch(MeetitUiApp.class, args);
     }
+
 }

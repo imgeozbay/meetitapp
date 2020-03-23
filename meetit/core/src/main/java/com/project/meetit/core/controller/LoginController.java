@@ -1,59 +1,79 @@
 package com.project.meetit.core.controller;
 
+import com.project.meetit.core.event.AppReadyEvent;
+import com.project.meetit.core.event.StageReadyEvent;
+import com.project.meetit.core.logic.ApplicationBase;
+import com.project.meetit.dboperations.model.User;
+import com.project.meetit.dboperations.repository.UserRepository;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Component
+@RestController
+@Data
+@RequestMapping("user")
+@RequiredArgsConstructor
 public class LoginController {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
 
-    @FXML private TextField firstNameField;
-    @FXML private TextField lastNameField;
-    @FXML private Label messageLabel;
+    @FXML
+    private TextField usernameField;
+    @FXML
+    private TextField pswdField;
+    @FXML
+    private Label infoLabel;
 
-    public LoginController() {
-    }
+    @NonNull
+    private final UserRepository userRepository;
+
+    @NonNull
+    private final ApplicationContext applicationContext;
 
     @FXML
     public void initialize() {
 
     }
 
-    public void sayHello() {
-
-//        user.getFullName();
-
-        String firstName = firstNameField.getText();
-        String lastName = lastNameField.getText();
+    public void login() {
+        String username = usernameField.getText();
+        String pswd = pswdField.getText();
 
         StringBuilder builder = new StringBuilder();
 
-        if (!StringUtils.isEmpty(firstName)) {
-            builder.append(firstName);
-        }
+//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(pswd)) {
+//            builder.append("Please Enter Username and Password");
+//        }
 
-        if (!StringUtils.isEmpty(lastName)) {
-            if (builder.length() > 0) {
-                builder.append(" ");
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            if (user.getPswd().equals(pswd)) {
+                ApplicationBase.getInstance().setCurrentUser(user);
+                applicationContext.publishEvent(new AppReadyEvent(ApplicationBase.getInstance().getStage()));
+                builder.append("Logged in !!!");
+            } else {
+                builder.append("Incorrect Password !!!");
             }
-            builder.append(lastName);
+        } else {
+            builder.append("User is not found ! " + username);
         }
 
         if (builder.length() > 0) {
-            String name = builder.toString();
-            log.debug("Saying hello to " + name);
-            messageLabel.setText("Hello " + name);
+            String info = builder.toString();
+            infoLabel.setText(info);
         } else {
-            log.debug("Neither first name nor last name was set, saying hello to anonymous person");
-            messageLabel.setText("Hello mysterious person");
+            infoLabel.setText("Please Enter Username and Password");
         }
     }
 
 
 }
+

@@ -1,19 +1,21 @@
 package com.project.meetit.main;
 
+import com.project.meetit.core.event.StageReadyEvent;
 import javafx.application.Application;
 import javafx.application.HostServices;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@ComponentScan(basePackages = "com.project.meetit.core.controller")
+@ComponentScan({"com.project.meetit.core","com.project.meetit.dboperations"})
 @Configuration
+@EnableMongoRepositories(basePackages={"com.project.meetit.dboperations.repository"})
 public class MeetitUiApp extends Application {
 
     private ConfigurableApplicationContext springContext;
@@ -38,16 +40,5 @@ public class MeetitUiApp extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         this.springContext.publishEvent(new StageReadyEvent(stage));
-    }
-
-    class StageReadyEvent extends ApplicationEvent {
-
-        public Stage getStage() {
-            return Stage.class.cast(getSource());
-        }
-
-        public StageReadyEvent(Stage source) {
-            super(source);
-        }
     }
 }

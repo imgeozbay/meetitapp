@@ -1,35 +1,52 @@
 package com.project.meetit.dboperations.model;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Service
-public class User extends GenericModel {
+@Document(collection = "user")
+@Data
+public class User {
 
-    @Value("${full}")
-    private String fullName;
-    @Value("${user}")
-    private String userName;
+    @Id
+    private String id;
 
-    public User(int id, String fullName, String userName) {
-        super(id);
-        this.fullName = fullName;
-        this.userName = userName;
+    private String username;
+    private String pswd;
+    private String firstName;
+    private String lastName;
+    private String department;
+
+//    public User(String firstName, String lastName, String department) {
+//        this.firstName = firstName;
+//        this.lastName = lastName;
+//        this.department = department;
+//    }
+
+    public String getUsername() {
+        return username;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getPswd() {
+        return pswd;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getDepartment() {
+        return department;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "User[id=%s, username='%s', firstName='%s', lastName='%s'], department='%s']",
+                id, username, firstName, lastName, department);
     }
 }

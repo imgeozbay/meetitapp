@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+
+<MigPane id="rootPane" fx:controller="com.project.meetit.core.controller.HomeController"
+         styleClass="main-panel"
+         layout="insets 20"
+         cols="[label, pref!][grow, 50::]"
+         rows=""
+         xmlns:fx="http://javafx.com/fxml/1">
+
+    <Label text="Home:" /> <TextField fx:id="homeField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+
+    <Button text="Create Meeting" onAction="#createMeeting" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
+
+    <Label fx:id="infoLabel" styleClass="info-message" MigPane.cc="span, growx, gaptop 15" />
+
+</MigPane >

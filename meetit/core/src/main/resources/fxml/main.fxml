@@ -10,11 +10,11 @@
          rows=""
          xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label text="First Name:" /> <TextField fx:id="firstNameField" prefColumnCount="30" MigPane.cc="growx, wrap" />
-    <Label text="Last Name:" />	<TextField fx:id="lastNameField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+    <Label text="Username:" /> <TextField fx:id="usernameField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+    <Label text="Password:" />	<PasswordField fx:id="pswdField" prefColumnCount="30" MigPane.cc="growx, wrap" />
 
-    <Button text="Say Hello" onAction="#sayHello" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
+    <Button text="Login" onAction="#login" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
 
-    <Label fx:id="messageLabel" styleClass="hello-message" MigPane.cc="span, growx, gaptop 15" />
+    <Label fx:id="infoLabel" styleClass="info-message" MigPane.cc="span, growx, gaptop 15" />
 
 </MigPane >

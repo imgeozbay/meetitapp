@@ -16,8 +16,9 @@
         <dependency>
             <groupId>com.project.meetit</groupId>
             <artifactId>db_operations</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0.0</version>
         </dependency>
+
     </dependencies>
 
 </project>

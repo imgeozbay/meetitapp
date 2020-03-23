@@ -3,13 +3,13 @@ package com.project.meetit.core.event;
 import javafx.stage.Stage;
 import org.springframework.context.ApplicationEvent;
 
-public class StageReadyEvent extends ApplicationEvent {
+public class AppReadyEvent extends ApplicationEvent {
 
     public Stage getStage() {
         return Stage.class.cast(getSource());
     }
 
-    public StageReadyEvent(Stage source) {
+    public AppReadyEvent(Stage source) {
         super(source);
     }
 }
