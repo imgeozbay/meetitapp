@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 
 @Component
-public class StageListener implements ApplicationListener<MeetitApp.StageReadyEvent> {
+public class StageListener implements ApplicationListener<MeetitUiApp.StageReadyEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(StageListener.class);
 
@@ -27,7 +27,8 @@ public class StageListener implements ApplicationListener<MeetitApp.StageReadyEv
 
     public StageListener(@Value("${spring.application.ui.title}") String applicationTitle,
                          @Value("classpath:/fxml/main.fxml") Resource fxml,
-                         @Value("classpath:/styles/style.css") Resource style, ApplicationContext applicationContext) {
+                         @Value("classpath:/styles/style.css") Resource style,
+                         ApplicationContext applicationContext) {
         this.applicationTitle = applicationTitle;
         this.fxml = fxml;
         this.style = style;
@@ -35,7 +36,7 @@ public class StageListener implements ApplicationListener<MeetitApp.StageReadyEv
     }
 
     @Override
-    public void onApplicationEvent(MeetitApp.StageReadyEvent stageReadyEvent) {
+    public void onApplicationEvent(MeetitUiApp.StageReadyEvent stageReadyEvent) {
         try {
             log.info("Starting Hello JavaFX and Maven demonstration application");
 

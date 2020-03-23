@@ -1,6 +1,5 @@
-package com.project.meetit.main;
+package com.project.meetit.core.controller;
 
-import javafx.application.HostServices;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -10,23 +9,20 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-public class LoginController1 {
+public class LoginController {
 
-    private static final Logger log = LoggerFactory.getLogger(LoginController1.class);
-
-    private final HostServices hostServices;
+    private static final Logger log = LoggerFactory.getLogger(LoginController.class);
 
     @FXML private TextField firstNameField;
     @FXML private TextField lastNameField;
     @FXML private Label messageLabel;
 
-    public LoginController1(HostServices hostServices) {
-        this.hostServices = hostServices;
+    public LoginController() {
     }
 
     @FXML
     public void initialize() {
-        System.out.println(this.hostServices.getDocumentBase());
+
     }
 
     public void sayHello() {
