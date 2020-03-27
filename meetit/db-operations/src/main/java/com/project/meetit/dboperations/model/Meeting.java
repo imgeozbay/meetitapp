@@ -1,52 +1,55 @@
 package com.project.meetit.dboperations.model;
 
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
 import java.util.Date;
 import java.util.List;
 
-public class Meeting extends GenericModel {
+
+@Document(collection = "meeting")
+@Data
+public class Meeting {
+
+    @Id
+    private String _id;
 
     private String subject;
     private Date date;
-    private MeetingRoom meetingRoom;
-    private List<User> attendeeList;
+    private MeetingRoom meetingroom;
+    private List<User> attendeelist;
 
-    public Meeting(int id, String subject, Date date, MeetingRoom meetingRoom, List<User> attendeeList) {
-        super(id);
+    public Meeting(String subject, Date date, MeetingRoom meetingroom, List<User> attendeelist) {
         this.subject = subject;
         this.date = date;
-        this.meetingRoom = meetingRoom;
-        this.attendeeList = attendeeList;
+        this.meetingroom = meetingroom;
+        this.attendeelist = attendeelist;
     }
 
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
-        this.subject = subject;
-    }
-
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public MeetingRoom getMeetingRoom() {
-        return meetingRoom;
-    }
-
-    public void setMeetingRoom(MeetingRoom meetingRoom) {
-        this.meetingRoom = meetingRoom;
+        return meetingroom;
     }
 
     public List<User> getAttendeeList() {
-        return attendeeList;
+        return attendeelist;
     }
 
-    public void setAttendeeList(List<User> attendeeList) {
-        this.attendeeList = attendeeList;
+    @Override
+    public String toString() {
+        return "Meeting{" +
+                "subject='" + subject + '\'' +
+                ", date=" + date +
+                ", meetingroom=" + meetingroom +
+                ", attendeelist=" + attendeelist +
+                '}';
     }
 }

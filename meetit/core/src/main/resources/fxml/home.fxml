@@ -10,7 +10,10 @@
          rows=""
          xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label text="Home:" /> <TextField fx:id="homeField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+    <Label text="Meeting Subject:" /> <TextField fx:id="subjectField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+    <Label text="Date: " /> <DatePicker fx:id="dateTimeField" MigPane.cc="growx, wrap" />
+    <Label text="Meeting Room: " /> <ComboBox fx:id="meetingRoomList" MigPane.cc="growx, wrap" />
+    <Label text="Attendee List: " /> <ListView fx:id="attendeesList" MigPane.cc="growx, wrap"/>
 
     <Button text="Create Meeting" onAction="#createMeeting" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
 

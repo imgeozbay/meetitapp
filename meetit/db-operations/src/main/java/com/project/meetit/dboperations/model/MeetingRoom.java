@@ -1,19 +1,25 @@
 package com.project.meetit.dboperations.model;
 
-public class MeetingRoom extends GenericModel {
+import lombok.Data;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+
+@Document(collection = "meetingroom")
+@Data
+public class MeetingRoom {
+
+    @Id
+    private String _id;
 
     private String name;
-
-    public MeetingRoom(int id, String name) {
-        super(id);
-        this.name = name;
-    }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String toString() {
+        return this.name;
     }
 }
+

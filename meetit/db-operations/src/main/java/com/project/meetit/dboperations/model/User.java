@@ -9,19 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
 
     @Id
-    private String id;
+    private String _id;
 
     private String username;
     private String pswd;
     private String firstName;
     private String lastName;
     private String department;
-
-//    public User(String firstName, String lastName, String department) {
-//        this.firstName = firstName;
-//        this.lastName = lastName;
-//        this.department = department;
-//    }
 
     public String getUsername() {
         return username;
@@ -45,8 +39,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format(
-                "User[id=%s, username='%s', firstName='%s', lastName='%s'], department='%s']",
-                id, username, firstName, lastName, department);
+        return this.firstName + " " + this.lastName;
     }
 }
