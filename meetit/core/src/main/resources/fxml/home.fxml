@@ -10,13 +10,20 @@
          rows=""
          xmlns:fx="http://javafx.com/fxml/1">
 
-    <Label text="Meeting Subject:" /> <TextField fx:id="subjectField" prefColumnCount="30" MigPane.cc="growx, wrap" />
-    <Label text="Date: " /> <DatePicker fx:id="dateTimeField" MigPane.cc="growx, wrap" />
-    <Label text="Meeting Room: " /> <ComboBox fx:id="meetingRoomList" MigPane.cc="growx, wrap" />
-    <Label text="Attendee List: " /> <ListView fx:id="attendeesList" MigPane.cc="growx, wrap"/>
+    <TableView fx:id="meetingTable" prefWidth="500.0" prefHeight="400.0" MigPane.cc="growx, wrap" >
+        <columns>
+            <TableColumn fx:id="subjectCol" prefWidth="25.0" text="Meeting Subject" />
+            <TableColumn fx:id="dateCol" prefWidth="25.0" text="Date and Time" />
+            <TableColumn fx:id="meetingRoomCol" prefWidth="25.0" text="Meeting Room" />
+            <TableColumn fx:id="attendeesCol" prefWidth="25.0" text="Attendees List" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
 
-    <Button text="Create Meeting" onAction="#createMeeting" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
-
-    <Label fx:id="infoLabel" styleClass="info-message" MigPane.cc="span, growx, gaptop 15" />
+    <Button text="Create" onAction="#createMeeting" MigPane.cc="growx, wrap, gaptop 15" />
+    <Button text="Update" onAction="#updateMeeting" MigPane.cc="growx, wrap, gaptop 15" />
+    <Button text="Delete" onAction="#deleteMeeting" MigPane.cc="growx, wrap, gaptop 15" />
 
 </MigPane >

@@ -8,8 +8,11 @@ public class DateHelper {
 
     public static Date convertLocalDateToDate(LocalDate localDate)
     {
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        //local date + atStartOfDay() + default time zone + toInstant() = Date
-        return  Date.from(localDate.atStartOfDay(defaultZoneId).toInstant());
+        return  Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static LocalDate convertDateToLocalDate(Date date)
+    {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 }

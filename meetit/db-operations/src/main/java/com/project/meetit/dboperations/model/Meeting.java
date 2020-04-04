@@ -27,6 +27,10 @@ public class Meeting {
         this.attendeelist = attendeelist;
     }
 
+    public String get_id() {
+        return _id;
+    }
+
     public String getSubject() {
         return subject;
     }
@@ -41,6 +45,22 @@ public class Meeting {
 
     public List<User> getAttendeeList() {
         return attendeelist;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setMeetingroom(MeetingRoom meetingroom) {
+        this.meetingroom = meetingroom;
+    }
+
+    public void setAttendeelist(List<User> attendeelist) {
+        this.attendeelist = attendeelist;
     }
 
     @Override

@@ -1,15 +1,19 @@
 package com.project.meetit.core.controller;
 
-import com.project.meetit.core.util.helper.DateHelper;
+import com.project.meetit.core.logic.DialogManager;
+import com.project.meetit.core.util.CRUDOperationTypeEnum;
 import com.project.meetit.dboperations.model.Meeting;
-import com.project.meetit.dboperations.model.MeetingRoom;
 import com.project.meetit.dboperations.model.User;
 import com.project.meetit.dboperations.repository.MeetingRepository;
-import com.project.meetit.dboperations.repository.MeetingRoomRepository;
-import com.project.meetit.dboperations.repository.UserRepository;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +23,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 
 @Component
 @RestController
@@ -33,62 +36,85 @@ public class HomeController {
     private static final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 
     @FXML
-    private TextField subjectField;
+    private TableView<Meeting> meetingTable;
     @FXML
-    private DatePicker dateTimeField;
+    public TableColumn<Meeting, String> subjectCol;
     @FXML
-    private ComboBox<MeetingRoom> meetingRoomList;
+    public TableColumn<Meeting, Date> dateCol;
     @FXML
-    private ListView<User> attendeesList;
+    public TableColumn<Meeting, String> meetingRoomCol;
     @FXML
-    private Button addAttendees;
+    public TableColumn<Meeting, String> attendeesCol;
 
-    @NonNull
-    private final MeetingRoomRepository meetingRoomRepository;
     @NonNull
     private final MeetingRepository meetingRepository;
     @NonNull
-    private final UserRepository userRepository;
+    private final MeetingController meetingController;
+    @NonNull
+    private final DialogManager dialogManager;
 
-    @FXML
-    private Label infoLabel;
+    private ObservableList<Meeting> tableMeetingDataList;
 
-    public void initialize()
-    {
+    public void initialize() {
         LOGGER.info("HELLO");
-        //get meeting rooms from mongo db
-        List<MeetingRoom> meetingRoomsDBList = meetingRoomRepository.findAll();
-        meetingRoomsDBList.forEach(meetingRoom -> meetingRoomList.getItems().add(meetingRoom));
 
-        //get users from mongo db
-        attendeesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        List<User> attendeeDBList = userRepository.findAll();
-        attendeeDBList.forEach(userObj -> attendeesList.getItems().add(userObj));
+        subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        meetingRoomCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMeetingRoom().getName()));
+        attendeesCol.setCellValueFactory(cellData -> {
+            StringBuilder attendees = new StringBuilder();
+            Meeting meeting = cellData.getValue();
+            for (int i = 0; i < meeting.getAttendeeList().size(); i++) {
+                User attendee = meeting.getAttendeeList().get(i);
+                if (i == meeting.getAttendeeList().size() - 1) {
+                    attendees.append(attendee.getFirstName() + " " + attendee.getLastName());
+                } else {
+                    attendees.append(attendee.getFirstName() + " " + attendee.getLastName() + ", ");
+                }
+            }
+            return new SimpleStringProperty(attendees.toString());
+        });
 
-
+        List<Meeting> meetingList = meetingRepository.findAll();
+        tableMeetingDataList = FXCollections.observableArrayList(meetingList);
+        meetingTable.setItems(tableMeetingDataList);
     }
 
     public void createMeeting() {
-        //meetingRoomRepository.getCollection()
-
-        String subject = subjectField.getText();
-        LocalDate dateTime = dateTimeField.getValue();
-        MeetingRoom meetingRoom = meetingRoomList.getSelectionModel().getSelectedItem();
-        ObservableList<User> selectedAttendeesIndices = attendeesList.getSelectionModel().getSelectedItems();
-
-        List<User> selectedAttendeeList = new ArrayList<>();
-        for(Object attendee : selectedAttendeesIndices){
-
-            selectedAttendeeList.add((User)attendee);
+        meetingController.initialize(CRUDOperationTypeEnum.ADD, null);
+        Optional<Meeting> meeting = meetingController.showDialogGetResult();
+        if (meeting.isPresent()) {
+            Meeting newMeeting = meetingRepository.insert(meeting.get());
+            if (newMeeting != null) {
+                tableMeetingDataList.add(newMeeting);
+            }
         }
+    }
 
-        Meeting meeting = new Meeting(subject, DateHelper.convertLocalDateToDate(dateTime), meetingRoom, selectedAttendeeList);
+    public void updateMeeting() {
+        Meeting selectedMeeting = meetingTable.getSelectionModel().getSelectedItem();
+        if (selectedMeeting != null) {
+            meetingController.initialize(CRUDOperationTypeEnum.UPDATE, selectedMeeting);
+            Optional<Meeting> meeting = meetingController.showDialogGetResult();
+            if (meeting.isPresent()) {
+                meetingRepository.save(meeting.get());
+                meetingTable.refresh();
+            }
+        } else {
+            dialogManager.showAlertDialog(Alert.AlertType.INFORMATION, "Please select a meeting.");
+        }
+    }
 
-        meetingRepository.insert(meeting);
-        List<Meeting> meetingTemp = meetingRepository.findAll();
-
-
-        meetingTemp.forEach(meeting1 -> System.out.println(meeting1));
-        infoLabel.setText("Created a Meeting !");
+    public void deleteMeeting() {
+        Meeting selectedMeeting = meetingTable.getSelectionModel().getSelectedItem();
+        if (selectedMeeting != null) {
+            if (DialogManager.showConfirmationDialog("Proceed deleting the selected meeting?")) {
+                meetingRepository.delete(selectedMeeting);
+                tableMeetingDataList.remove(selectedMeeting);
+                meetingTable.refresh();
+            }
+        } else {
+            dialogManager.showAlertDialog(Alert.AlertType.INFORMATION, "Please select a meeting.");
+        }
     }
 }

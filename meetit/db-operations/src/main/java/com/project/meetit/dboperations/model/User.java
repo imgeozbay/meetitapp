@@ -17,6 +17,9 @@ public class User {
     private String lastName;
     private String department;
 
+    public String get_id() {
+        return _id;
+    }
     public String getUsername() {
         return username;
     }
