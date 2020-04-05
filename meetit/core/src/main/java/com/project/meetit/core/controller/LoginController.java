@@ -40,8 +40,7 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-        usernameField.setText("orkunonurgil");
-        pswdField.setText("123");
+
     }
 
     public void login() {
