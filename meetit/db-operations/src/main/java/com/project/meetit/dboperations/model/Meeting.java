@@ -10,21 +10,28 @@ import java.util.List;
 
 @Document(collection = "meeting")
 @Data
-public class Meeting {
+public class Meeting implements Cloneable {
 
     @Id
     private String _id;
 
     private String subject;
-    private Date date;
+    private Date startDate;
+    private Date endDate;
     private MeetingRoom meetingroom;
     private List<User> attendeelist;
 
-    public Meeting(String subject, Date date, MeetingRoom meetingroom, List<User> attendeelist) {
+    public Meeting(String subject, Date startDate, Date endDate, MeetingRoom meetingroom, List<User> attendeelist) {
         this.subject = subject;
-        this.date = date;
+        this.startDate = startDate;
+        this.endDate = endDate;
         this.meetingroom = meetingroom;
         this.attendeelist = attendeelist;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 
     public String get_id() {
@@ -35,8 +42,12 @@ public class Meeting {
         return subject;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
     }
 
     public MeetingRoom getMeetingRoom() {
@@ -51,8 +62,12 @@ public class Meeting {
         this.subject = subject;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 
     public void setMeetingroom(MeetingRoom meetingroom) {
@@ -67,7 +82,8 @@ public class Meeting {
     public String toString() {
         return "Meeting{" +
                 "subject='" + subject + '\'' +
-                ", date=" + date +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
                 ", meetingroom=" + meetingroom +
                 ", attendeelist=" + attendeelist +
                 '}';

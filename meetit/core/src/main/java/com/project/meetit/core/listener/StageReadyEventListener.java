@@ -2,9 +2,10 @@ package com.project.meetit.core.listener;
 
 import com.project.meetit.core.event.StageReadyEvent;
 import com.project.meetit.core.logic.ApplicationBase;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
+import com.project.meetit.core.util.helper.ResourceHelper;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,24 +41,22 @@ public class StageReadyEventListener implements ApplicationListener<StageReadyEv
     @Override
     public void onApplicationEvent(StageReadyEvent stageReadyEvent) {
         try {
-            log.info("Starting Hello JavaFX and Maven demonstration application");
+            log.info("Staget Ready Event Listener Called");
 
             Stage stage = stageReadyEvent.getStage();
-            URL url = this.fxml.getURL();
-            log.debug("Loading FXML for main view from: {}", url.toString());
-            URL styleUrl = this.style.getURL();
-            FXMLLoader fxmlLoader = new FXMLLoader();
-            fxmlLoader.setControllerFactory(applicationContext::getBean);
-            Parent root = fxmlLoader.load(getClass().getResourceAsStream("/fxml/main.fxml"));
             // Parent root = fxmlLoader.load();
             log.debug("Showing JFX scene");
-            Scene scene = new Scene(root, 600, 600);
+            URL styleUrl = this.style.getURL();
+            Scene scene = new Scene(ResourceHelper.getInstance().getParentNode(fxml, applicationContext), 300, 300);
             scene.getStylesheets().add(styleUrl.toString());
             stage.setTitle("Hello JavaFX and Maven");
             stage.setScene(scene);
             stage.setTitle(this.applicationTitle);
             ApplicationBase.getInstance().setStage(stage);
             stage.show();
+            Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+            stage.setX((primScreenBounds.getWidth() - stage.getWidth()) / 2);
+            stage.setY((primScreenBounds.getHeight() - stage.getHeight()) / 2);
         } catch (IOException e)
         {
             throw new RuntimeException(e);

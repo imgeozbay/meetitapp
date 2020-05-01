@@ -1,5 +1,6 @@
 package com.project.meetit.core.view;
 
+import com.project.meetit.core.component.DateTimePicker;
 import com.project.meetit.core.util.CRUDOperationTypeEnum;
 import com.project.meetit.dboperations.model.Meeting;
 import com.project.meetit.dboperations.model.MeetingRoom;
@@ -8,14 +9,18 @@ import javafx.geometry.Insets;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 
-public class MeetingDialog extends Dialog<Meeting> {
+import java.util.List;
+
+public class MeetingDialog extends Dialog<List<Meeting>> {
 
     private CRUDOperationTypeEnum crudOperationTypeEnum;
 
     private TextField txtSubject;
-    private DatePicker dpDate;
+    private DateTimePicker dpDateTimeStart;
+    private DateTimePicker dpDateTimeEnd;
     private ComboBox<MeetingRoom> cmbMeetingRoom;
     private ListView<User> listViewAttendees;
+    private CheckBox chkRecurrentMeeting;
 
     private ButtonType btnSave;
     private ButtonType btnCancel;
@@ -34,15 +39,19 @@ public class MeetingDialog extends Dialog<Meeting> {
 
     private void initView() {
         Label lblSubject = new Label("Meeting Subject:");
-        Label lblDate = new Label("Date:");
+        Label lblStartDate = new Label("Start Date:");
+        Label lblEndDate = new Label("End Date:");
         Label lblMeetingRoom = new Label("Meeting Room:");
         Label lblAttendeeList = new Label("Attendee List:");
+        Label lblRecurrentMeeting = new Label("Is Recurrent Meeting?");
 
         txtSubject = new TextField();
-        dpDate = new DatePicker();
+        dpDateTimeStart = new DateTimePicker();
+        dpDateTimeEnd = new DateTimePicker();
         cmbMeetingRoom = new ComboBox<>();
         listViewAttendees = new ListView<>();
         listViewAttendees.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        chkRecurrentMeeting = new CheckBox();
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(10, 10, 10, 10));
@@ -51,12 +60,18 @@ public class MeetingDialog extends Dialog<Meeting> {
 
         grid.add(lblSubject, 1, 1);
         grid.add(txtSubject, 2, 1);
-        grid.add(lblDate, 1, 2);
-        grid.add(dpDate, 2, 2);
-        grid.add(lblMeetingRoom, 1, 3);
-        grid.add(cmbMeetingRoom, 2, 3);
-        grid.add(lblAttendeeList, 1, 4);
-        grid.add(listViewAttendees, 2, 4);
+        grid.add(lblStartDate, 1, 2);
+        grid.add(dpDateTimeStart, 2, 2);
+        grid.add(lblEndDate, 1, 3);
+        grid.add(dpDateTimeEnd, 2, 3);
+        grid.add(lblMeetingRoom, 1, 4);
+        grid.add(cmbMeetingRoom, 2, 4);
+        grid.add(lblAttendeeList, 1, 5);
+        grid.add(listViewAttendees, 2, 5);
+        if (crudOperationTypeEnum != CRUDOperationTypeEnum.UPDATE) {
+            grid.add(lblRecurrentMeeting, 1, 6);
+            grid.add(chkRecurrentMeeting, 2, 6);
+        }
         getDialogPane().setContent(grid);
 
         btnCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
@@ -70,8 +85,12 @@ public class MeetingDialog extends Dialog<Meeting> {
         return txtSubject;
     }
 
-    public DatePicker getDpDate() {
-        return dpDate;
+    public DateTimePicker getDpDateTimeStart() {
+        return dpDateTimeStart;
+    }
+
+    public DateTimePicker getDpDateTimeEnd() {
+        return dpDateTimeEnd;
     }
 
     public ComboBox<MeetingRoom> getCmbMeetingRoom() {
@@ -80,6 +99,10 @@ public class MeetingDialog extends Dialog<Meeting> {
 
     public ListView<User> getListViewAttendees() {
         return listViewAttendees;
+    }
+
+    public CheckBox getChkRecurrentMeeting() {
+        return chkRecurrentMeeting;
     }
 
     public ButtonType getBtnSave() {

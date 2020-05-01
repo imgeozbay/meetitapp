@@ -1,5 +1,8 @@
 package com.project.meetit.core.controller;
 
+import com.project.meetit.core.event.AppReadyEvent;
+import com.project.meetit.core.event.LogoutEvent;
+import com.project.meetit.core.logic.ApplicationBase;
 import com.project.meetit.core.logic.DialogManager;
 import com.project.meetit.core.util.CRUDOperationTypeEnum;
 import com.project.meetit.dboperations.model.Meeting;
@@ -18,11 +21,14 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @Component
@@ -39,7 +45,9 @@ public class HomeController {
     @FXML
     public TableColumn<Meeting, String> subjectCol;
     @FXML
-    public TableColumn<Meeting, Date> dateCol;
+    public TableColumn<Meeting, Date> startDateCol;
+    @FXML
+    public TableColumn<Meeting, Date> endDateCol;
     @FXML
     public TableColumn<Meeting, String> meetingRoomCol;
     @FXML
@@ -52,13 +60,29 @@ public class HomeController {
     @NonNull
     private final DialogManager dialogManager;
 
+    @NonNull
+    private final ApplicationContext applicationContext;
+
     private ObservableList<Meeting> tableMeetingDataList;
 
     public void initialize() {
         LOGGER.info("HELLO");
 
+        subjectCol.prefWidthProperty().bind(meetingTable.widthProperty().multiply(0.125));
+        startDateCol.prefWidthProperty().bind(meetingTable.widthProperty().multiply(0.275));
+        endDateCol.prefWidthProperty().bind(meetingTable.widthProperty().multiply(0.275));
+        meetingRoomCol.prefWidthProperty().bind(meetingTable.widthProperty().multiply(0.1));
+        attendeesCol.prefWidthProperty().bind(meetingTable.widthProperty().multiply(0.225));
+
+        subjectCol.setResizable(false);
+        startDateCol.setResizable(false);
+        endDateCol.setResizable(false);
+        meetingRoomCol.setResizable(false);
+        attendeesCol.setResizable(false);
+
         subjectCol.setCellValueFactory(new PropertyValueFactory<>("subject"));
-        dateCol.setCellValueFactory(new PropertyValueFactory<>("date"));
+        startDateCol.setCellValueFactory(new PropertyValueFactory<>("startDate"));
+        endDateCol.setCellValueFactory(new PropertyValueFactory<>("endDate"));
         meetingRoomCol.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMeetingRoom().getName()));
         attendeesCol.setCellValueFactory(cellData -> {
             StringBuilder attendees = new StringBuilder();
@@ -79,14 +103,20 @@ public class HomeController {
         meetingTable.setItems(tableMeetingDataList);
     }
 
+    public void logout() {
+        ApplicationBase.getInstance().setCurrentUser(null);
+        applicationContext.publishEvent(new LogoutEvent(ApplicationBase.getInstance().getStage()));
+        LOGGER.info("Logged out from the application");
+    }
+
     public void createMeeting() {
         meetingController.initialize(CRUDOperationTypeEnum.ADD, null);
-        Optional<Meeting> meeting = meetingController.showDialogGetResult();
-        if (meeting.isPresent()) {
-            Meeting newMeeting = meetingRepository.insert(meeting.get());
-            if (newMeeting != null) {
-                tableMeetingDataList.add(newMeeting);
-            }
+        Optional<List<Meeting>> meetingList = meetingController.showDialogGetResult();
+        if (meetingList.isPresent()) {
+            meetingList.get().forEach(meeting -> {
+                meetingRepository.insert(meeting);
+                tableMeetingDataList.add(meeting);
+            });
         }
     }
 
@@ -94,10 +124,15 @@ public class HomeController {
         Meeting selectedMeeting = meetingTable.getSelectionModel().getSelectedItem();
         if (selectedMeeting != null) {
             meetingController.initialize(CRUDOperationTypeEnum.UPDATE, selectedMeeting);
-            Optional<Meeting> meeting = meetingController.showDialogGetResult();
-            if (meeting.isPresent()) {
-                meetingRepository.save(meeting.get());
+            Optional<List<Meeting>> meetingList = meetingController.showDialogGetResult();
+            if (meetingList.isPresent()) {
+                meetingRepository.save(meetingList.get().get(0));
                 meetingTable.refresh();
+                for (int i = 1; i < meetingList.get().size(); i++) {
+                    Meeting meeting = meetingList.get().get(i);
+                    meetingRepository.insert(meeting);
+                    tableMeetingDataList.add(meeting);
+                }
             }
         } else {
             dialogManager.showAlertDialog(Alert.AlertType.INFORMATION, "Please select a meeting.");

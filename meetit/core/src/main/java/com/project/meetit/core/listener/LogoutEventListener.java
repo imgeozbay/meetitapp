@@ -1,6 +1,6 @@
 package com.project.meetit.core.listener;
 
-import com.project.meetit.core.event.AppReadyEvent;
+import com.project.meetit.core.event.LogoutEvent;
 import com.project.meetit.core.util.helper.ResourceHelper;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -18,31 +18,31 @@ import java.io.IOException;
 import java.net.URL;
 
 @Component
-public class AppReadyEventListener implements ApplicationListener<AppReadyEvent> {
+public class LogoutEventListener implements ApplicationListener<LogoutEvent> {
 
-    private static final Logger log = LoggerFactory.getLogger(AppReadyEventListener.class);
+    private static final Logger log = LoggerFactory.getLogger(LogoutEventListener.class);
 
     private final Resource fxml;
     private final Resource style;
     private final ApplicationContext applicationContext;
 
-    public AppReadyEventListener(@Value("classpath:/fxml/home.fxml") Resource fxml,
-                                 @Value("classpath:/styles/style.css") Resource style,
-                                 ApplicationContext applicationContext) {
+    public LogoutEventListener(@Value("classpath:/fxml/main.fxml") Resource fxml,
+                               @Value("classpath:/styles/style.css") Resource style,
+                               ApplicationContext applicationContext) {
         this.fxml = fxml;
         this.style = style;
         this.applicationContext = applicationContext;
     }
 
     @Override
-    public void onApplicationEvent(AppReadyEvent appReadyEvent) {
+    public void onApplicationEvent(LogoutEvent logoutEvent) {
         try {
-            log.info("Starting Hello JavaFX and Maven demonstration application");
+            log.info("Logout Event Listener Called");
 
-            Stage stage = appReadyEvent.getStage();
+            Stage stage = logoutEvent.getStage();
             log.debug("Showing JFX scene");
             URL styleUrl = this.style.getURL();
-            Scene scene = new Scene(ResourceHelper.getInstance().getParentNode(fxml, applicationContext), 1200, 400);
+            Scene scene = new Scene(ResourceHelper.getInstance().getParentNode(fxml, applicationContext), 300, 300);
             scene.getStylesheets().add(styleUrl.toString());
             stage.setScene(scene);
             Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();

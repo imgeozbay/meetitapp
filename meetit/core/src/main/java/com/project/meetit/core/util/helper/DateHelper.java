@@ -1,18 +1,17 @@
 package com.project.meetit.core.util.helper;
 
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
 public class DateHelper {
 
-    public static Date convertLocalDateToDate(LocalDate localDate)
-    {
-        return  Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    public static Date convertLocalDateTimeToDate(LocalDateTime localDateTime) {
+        return Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static LocalDate convertDateToLocalDate(Date date)
-    {
-        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    public static LocalDateTime convertDateToLocalDateTime(Date date) {
+        return Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 }

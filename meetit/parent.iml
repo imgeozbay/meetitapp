@@ -70,8 +70,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.2.0.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.2.0.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.miglayout:miglayout-javafx:4.2" level="project" />
-    <orderEntry type="library" name="Maven: com.miglayout:miglayout-core:4.2" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:13" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-controls:win:13" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-fxml:13" level="project" />

@@ -40,7 +40,8 @@ public class LoginController {
 
     @FXML
     public void initialize() {
-
+        usernameField.setText("imgeozbay");
+        pswdField.setText("12345");
     }
 
     public void login() {
@@ -48,10 +49,6 @@ public class LoginController {
         String pswd = pswdField.getText();
 
         StringBuilder builder = new StringBuilder();
-
-//        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(pswd)) {
-//            builder.append("Please Enter Username and Password");
-//        }
 
         User user = userRepository.findByUsername(username);
         if (user != null) {

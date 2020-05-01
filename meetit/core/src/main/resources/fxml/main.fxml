@@ -1,20 +1,32 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
-<?import org.tbee.javafx.scene.layout.fxml.MigPane?>
+<?import javafx.scene.layout.*?>
 
-<MigPane id="rootPane" fx:controller="com.project.meetit.core.controller.LoginController"
-         styleClass="main-panel"
-         layout="insets 20"
-         cols="[label, pref!][grow, 50::]"
-         rows=""
-         xmlns:fx="http://javafx.com/fxml/1">
+<GridPane id="rootPane" fx:controller="com.project.meetit.core.controller.LoginController"
+          styleClass="main-panel"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+    <padding>
+        <Insets top="25" right="25" bottom="10" left="25"/>
+    </padding>
 
-    <Label text="Username:" /> <TextField fx:id="usernameField" prefColumnCount="30" MigPane.cc="growx, wrap" />
-    <Label text="Password:" />	<PasswordField fx:id="pswdField" prefColumnCount="30" MigPane.cc="growx, wrap" />
+    <Label text="Username:"
+           GridPane.columnIndex="0" GridPane.rowIndex="0"/>
 
-    <Button text="Login" onAction="#login" MigPane.cc="skip, gap :push, gaptop 15, wrap" />
+    <TextField fx:id="usernameField"
+               GridPane.columnIndex="1" GridPane.rowIndex="0"/>
 
-    <Label fx:id="infoLabel" styleClass="info-message" MigPane.cc="span, growx, gaptop 15" />
+    <Label text="Password:"
+           GridPane.columnIndex="0" GridPane.rowIndex="1"/>
 
-</MigPane >
+    <PasswordField fx:id="pswdField"
+                   GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <Button text="Login"
+                onAction="#login"/>
+    </HBox>
+
+    <Label fx:id="infoLabel" styleClass="info-message"
+           GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+</GridPane>

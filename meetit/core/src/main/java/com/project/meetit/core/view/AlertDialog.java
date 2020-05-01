@@ -14,12 +14,12 @@ public class AlertDialog extends Alert {
             case INFORMATION:
                 setTitle("Information");
                 setHeaderText(text);
-                show();
+                showAndWait();
                 break;
             case ERROR:
                 setTitle("Error");
                 setHeaderText(text);
-                show();
+                showAndWait();
                 break;
         }
     }

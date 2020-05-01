@@ -24,7 +24,6 @@ public class ApplicationBase {
         return applicationBase;
     }
 
-
     public User getCurrentUser() {
         return currentUser;
     }
